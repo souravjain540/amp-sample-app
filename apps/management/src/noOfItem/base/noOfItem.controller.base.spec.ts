@@ -13,52 +13,36 @@ import { ACLModule } from "../../auth/acl.module";
 import { AclFilterResponseInterceptor } from "../../interceptors/aclFilterResponse.interceptor";
 import { AclValidateRequestInterceptor } from "../../interceptors/aclValidateRequest.interceptor";
 import { map } from "rxjs";
-import { AddressController } from "../address.controller";
-import { AddressService } from "../address.service";
+import { NoOfItemController } from "../noOfItem.controller";
+import { NoOfItemService } from "../noOfItem.service";
 
 const nonExistingId = "nonExistingId";
 const existingId = "existingId";
 const CREATE_INPUT = {
-  address_1: "exampleAddress_1",
-  address_2: "exampleAddress_2",
-  city: "exampleCity",
   createdAt: new Date(),
   id: "exampleId",
-  state: "exampleState",
+  quantity: 42,
   updatedAt: new Date(),
-  zip: 42,
 };
 const CREATE_RESULT = {
-  address_1: "exampleAddress_1",
-  address_2: "exampleAddress_2",
-  city: "exampleCity",
   createdAt: new Date(),
   id: "exampleId",
-  state: "exampleState",
+  quantity: 42,
   updatedAt: new Date(),
-  zip: 42,
 };
 const FIND_MANY_RESULT = [
   {
-    address_1: "exampleAddress_1",
-    address_2: "exampleAddress_2",
-    city: "exampleCity",
     createdAt: new Date(),
     id: "exampleId",
-    state: "exampleState",
+    quantity: 42,
     updatedAt: new Date(),
-    zip: 42,
   },
 ];
 const FIND_ONE_RESULT = {
-  address_1: "exampleAddress_1",
-  address_2: "exampleAddress_2",
-  city: "exampleCity",
   createdAt: new Date(),
   id: "exampleId",
-  state: "exampleState",
+  quantity: 42,
   updatedAt: new Date(),
-  zip: 42,
 };
 
 const service = {
@@ -108,18 +92,18 @@ const aclValidateRequestInterceptor = {
   },
 };
 
-describe("Address", () => {
+describe("NoOfItem", () => {
   let app: INestApplication;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
         {
-          provide: AddressService,
+          provide: NoOfItemService,
           useValue: service,
         },
       ],
-      controllers: [AddressController],
+      controllers: [NoOfItemController],
       imports: [MorganModule.forRoot(), ACLModule],
     })
       .overrideGuard(DefaultAuthGuard)
@@ -136,9 +120,9 @@ describe("Address", () => {
     await app.init();
   });
 
-  test("POST /addresses", async () => {
+  test("POST /noOfItems", async () => {
     await request(app.getHttpServer())
-      .post("/addresses")
+      .post("/noOfItems")
       .send(CREATE_INPUT)
       .expect(HttpStatus.CREATED)
       .expect({
@@ -148,9 +132,9 @@ describe("Address", () => {
       });
   });
 
-  test("GET /addresses", async () => {
+  test("GET /noOfItems", async () => {
     await request(app.getHttpServer())
-      .get("/addresses")
+      .get("/noOfItems")
       .expect(HttpStatus.OK)
       .expect([
         {
@@ -161,9 +145,9 @@ describe("Address", () => {
       ]);
   });
 
-  test("GET /addresses/:id non existing", async () => {
+  test("GET /noOfItems/:id non existing", async () => {
     await request(app.getHttpServer())
-      .get(`${"/addresses"}/${nonExistingId}`)
+      .get(`${"/noOfItems"}/${nonExistingId}`)
       .expect(HttpStatus.NOT_FOUND)
       .expect({
         statusCode: HttpStatus.NOT_FOUND,
@@ -172,9 +156,9 @@ describe("Address", () => {
       });
   });
 
-  test("GET /addresses/:id existing", async () => {
+  test("GET /noOfItems/:id existing", async () => {
     await request(app.getHttpServer())
-      .get(`${"/addresses"}/${existingId}`)
+      .get(`${"/noOfItems"}/${existingId}`)
       .expect(HttpStatus.OK)
       .expect({
         ...FIND_ONE_RESULT,
@@ -183,10 +167,10 @@ describe("Address", () => {
       });
   });
 
-  test("POST /addresses existing resource", async () => {
+  test("POST /noOfItems existing resource", async () => {
     const agent = request(app.getHttpServer());
     await agent
-      .post("/addresses")
+      .post("/noOfItems")
       .send(CREATE_INPUT)
       .expect(HttpStatus.CREATED)
       .expect({
@@ -196,7 +180,7 @@ describe("Address", () => {
       })
       .then(function () {
         agent
-          .post("/addresses")
+          .post("/noOfItems")
           .send(CREATE_INPUT)
           .expect(HttpStatus.CONFLICT)
           .expect({
