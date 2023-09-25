@@ -176,7 +176,7 @@ describe("Product", () => {
   });
 
   test("POST /products existing resource", async () => {
-    let agent = request(app.getHttpServer());
+    const agent = request(app.getHttpServer());
     await agent
       .post("/products")
       .send(CREATE_INPUT)
